@@ -1734,11 +1734,13 @@ body {
   .package-markers text { fill: #604474; font: 600 11px var(--font); }
   .platform-scene[data-focus="infra"] [data-package="infra"] circle,
   .platform-scene[data-focus="delivery"] [data-package="delivery"] circle,
-  .platform-scene[data-focus="observe"] [data-package="observe"] circle { fill: #7040d5; stroke: #7040d5; }
+  .platform-scene[data-focus="observe"] [data-package="observe"] circle,
+  .platform-scene[data-focus="experience"] [data-package="experience"] circle { fill: #7040d5; stroke: #7040d5; }
   .platform-scene[data-focus="infra"] [data-package="infra"] text,
   .platform-scene[data-focus="delivery"] [data-package="delivery"] text,
-  .platform-scene[data-focus="observe"] [data-package="observe"] text { fill: #fff; }
-  .package-labels { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); padding: 0 16px; gap: 8px; border-bottom: 1px solid #eee9f3; }
+  .platform-scene[data-focus="observe"] [data-package="observe"] text,
+  .platform-scene[data-focus="experience"] [data-package="experience"] text { fill: #fff; }
+  .package-labels { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); padding: 0 16px; gap: 8px; border-bottom: 1px solid #eee9f3; }
   .package-name { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-width: 0; min-height: 56px; padding: 4px 0 10px; border: 0; background: transparent; color: #605769; font: 600 .72rem var(--font); cursor: pointer; touch-action: manipulation; }
   .package-name > span:first-child { color: #7a6b89; font: 500 .58rem var(--mono); }
   .package-title { width: 100%; overflow-wrap: anywhere; }
@@ -1841,7 +1843,7 @@ body {
     .scene-heading { padding: 16px 14px 0; font-size: .51rem; }
     .scene-heading > span:last-child { display: none; }
     .scene-world { height: 280px; }
-    .package-labels { padding: 0 10px; gap: 2px; }
+    .package-labels { grid-template-columns: repeat(2,minmax(0,1fr)); padding: 0 10px; gap: 2px; }
     .package-name { font-size: .63rem; }
     .system-detail { padding: 16px; }
     .system-detail-top { grid-template-columns: 32px minmax(0,1fr); }

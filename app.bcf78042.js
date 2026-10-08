@@ -594,8 +594,9 @@
     if (!scene) return;
     var systems = {
       infra: ['01', 'Infrastructure as code', 'Terraform', 'Gated Terraform pipelines. Auto-apply in DEV, manual approval into production.', 'approach', 'Explore my approach'],
-      delivery: ['02', 'Guardrails for delivery', 'CI/CD', 'Pipelines, gateways, and guardrails that let teams ship safely. Explore the decisions behind HiveBox.', 'hivebox', 'Explore HiveBox'],
-      observe: ['03', 'Find the real cause', 'Cloud logs', 'Correlation IDs, cloud logs, and execution plans. Trace the failure back to its source.', 'toolkit', 'Explore my toolkit']
+      delivery: ['02', 'Guardrails for delivery', 'CI/CD', 'Pipelines, gateways, and guardrails that let teams ship safely. Explore my projects and the decisions behind them.', 'projects', 'Explore my projects'],
+      observe: ['03', 'Find the real cause', 'Cloud logs', 'Correlation IDs, cloud logs, and execution plans. Trace the failure back to its source.', 'toolkit', 'Explore my toolkit'],
+      experience: ['04', 'My experience', '5 roles', 'Five roles across Omnia Group and Yellowen. Explore the path from web development to DevOps.', 'experience', 'Explore my experience']
     };
     var buttons = scene.querySelectorAll('[data-system]');
     var detail = scene.querySelector('.system-detail');
@@ -606,7 +607,7 @@
       buttons.forEach(function (button) {
         button.setAttribute('aria-pressed', String(button.dataset.system === key));
       });
-      scene.querySelector('.system-category').textContent = 'PLATFORM LAYER / ' + data[0];
+      scene.querySelector('.system-category').textContent = 'PORTFOLIO / ' + data[0];
       scene.querySelector('.system-title').textContent = data[1];
       scene.querySelector('.system-badge').textContent = data[2];
       scene.querySelector('.system-description').textContent = data[3];

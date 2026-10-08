@@ -17,15 +17,15 @@
     function fallbackNames(){
       var world=scene.querySelector('.scene-world').getBoundingClientRect();
       var scale=Math.min(world.width/680,world.height/490),offsetX=(world.width-680*scale)/2,offsetY=(world.height-490*scale)/2;
-      placeNames([[190,245],[335,245],[480,245]].map(function(p){return [offsetX+p[0]*scale,offsetY+p[1]*scale];}),world.width,world.height);
+      placeNames([[150,245],[275,245],[400,245],[525,245]].map(function(p){return [offsetX+p[0]*scale,offsetY+p[1]*scale];}),world.width,world.height);
     }
     window.addEventListener('resize',function(){if(!scene.classList.contains('has-3d'))fallbackNames();});
     fallbackNames();
     var gl = canvas.getContext('webgl', { alpha: true, antialias: true, powerPreference: 'low-power' });
     if (!gl) return;
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    var vertex = 'attribute vec3 aPosition; attribute vec3 aNormal; attribute vec3 aColor; attribute float aId; attribute float aPart; uniform vec3 uEye; uniform vec3 uRight; uniform vec3 uUp; uniform vec3 uForward; uniform float uAspect; uniform vec3 uLifts; uniform vec3 uReveal; varying vec3 vColor; varying vec3 vNormal; varying vec3 vPosition; varying float vId; void main(){vec3 p=aPosition; if(aId>0.5 && aId<1.5)p.y+=uLifts.x;else if(aId>1.5 && aId<2.5)p.y+=uLifts.y;else if(aId>2.5 && aId<3.5)p.y+=uLifts.z; if(aPart>0.5){float reveal=aId<1.5?uReveal.x:(aId<2.5?uReveal.y:uReveal.z);p.y+=reveal*0.65;} vec3 d=p-uEye; vec3 v=vec3(dot(d,uRight),dot(d,uUp),dot(d,uForward)); gl_Position=vec4(v.x*2.25/uAspect,v.y*2.25,1.005*v.z-0.2005,v.z);vColor=aColor;vNormal=aNormal;vPosition=p;vId=aId;}';
-    var fragment = 'precision mediump float; varying vec3 vColor; varying vec3 vNormal; varying vec3 vPosition; varying float vId; uniform float uPick; uniform float uHover; uniform vec3 uPulse; void main(){if(uPick>0.5){gl_FragColor=vec4(vId/255.0,0.0,0.0,1.0);return;} vec3 n=normalize(vNormal); float light=0.78+0.22*max(dot(n,normalize(vec3(-0.6,1.0,0.5))),0.0); if(vPosition.y<0.09){float d=min(length(vPosition.xz-vec2(-3.0,0.6)),min(length(vPosition.xz-vec2(0.0,0.6)),length(vPosition.xz-vec2(3.0,0.6))));light=0.85+0.15*smoothstep(0.3,1.25,d);} if(vId>0.5 && abs(vId-uHover)<0.1)light+=0.09; vec3 col=vColor*light; if(vPosition.y<0.09 && uPulse.z>=0.0 && uPulse.z<1.4){float r=length(vPosition.xz-uPulse.xy);float wave=(1.0-smoothstep(0.03,0.13,abs(r-uPulse.z*4.5)))*(1.0-uPulse.z/1.4);col=mix(col,vec3(0.63,0.38,0.95),wave*0.6);} gl_FragColor=vec4(col,1.0);}';
+    var vertex = 'attribute vec3 aPosition; attribute vec3 aNormal; attribute vec3 aColor; attribute float aId; attribute float aPart; uniform vec3 uEye; uniform vec3 uRight; uniform vec3 uUp; uniform vec3 uForward; uniform float uAspect; uniform vec4 uLifts; uniform vec4 uReveal; varying vec3 vColor; varying vec3 vNormal; varying vec3 vPosition; varying float vId; void main(){vec3 p=aPosition; if(aId>0.5 && aId<1.5)p.y+=uLifts.x;else if(aId>1.5 && aId<2.5)p.y+=uLifts.y;else if(aId>2.5 && aId<3.5)p.y+=uLifts.z;else if(aId>3.5 && aId<4.5)p.y+=uLifts.w; if(aPart>0.5){float reveal=aId<1.5?uReveal.x:(aId<2.5?uReveal.y:(aId<3.5?uReveal.z:uReveal.w));p.y+=reveal*0.65;} vec3 d=p-uEye; vec3 v=vec3(dot(d,uRight),dot(d,uUp),dot(d,uForward)); gl_Position=vec4(v.x*2.25/uAspect,v.y*2.25,1.005*v.z-0.2005,v.z);vColor=aColor;vNormal=aNormal;vPosition=p;vId=aId;}';
+    var fragment = 'precision mediump float; varying vec3 vColor; varying vec3 vNormal; varying vec3 vPosition; varying float vId; uniform float uPick; uniform float uHover; uniform vec3 uPulse; void main(){if(uPick>0.5){gl_FragColor=vec4(vId/255.0,0.0,0.0,1.0);return;} vec3 n=normalize(vNormal); float light=0.78+0.22*max(dot(n,normalize(vec3(-0.6,1.0,0.5))),0.0); if(vPosition.y<0.09){float d=min(min(length(vPosition.xz-vec2(-3.6,0.6)),length(vPosition.xz-vec2(-1.2,0.6))),min(length(vPosition.xz-vec2(1.2,0.6)),length(vPosition.xz-vec2(3.6,0.6))));light=0.85+0.15*smoothstep(0.3,1.25,d);} if(vId>0.5 && abs(vId-uHover)<0.1)light+=0.09; vec3 col=vColor*light; if(vPosition.y<0.09 && uPulse.z>=0.0 && uPulse.z<1.4){float r=length(vPosition.xz-uPulse.xy);float wave=(1.0-smoothstep(0.03,0.13,abs(r-uPulse.z*4.5)))*(1.0-uPulse.z/1.4);col=mix(col,vec3(0.63,0.38,0.95),wave*0.6);} gl_FragColor=vec4(col,1.0);}';
     function shader(type, source) {
       var s = gl.createShader(type); gl.shaderSource(s, source); gl.compileShader(s);
       return s;
@@ -139,8 +139,8 @@
     });
     box(fx,1.48,fz-.07,.70,.06,.72,white);
     box(fx,1.01,fz+.49,.50,.035,.025,trim);
-    // Three portfolio topics represented by selectable pallet clusters.
-    var objects=[[-3,.6,gray],[0,.6,violet],[3,.6,white]];
+    // Four portfolio destinations represented by selectable pallet clusters.
+    var objects=[[-3.6,.6,gray],[-1.2,.6,violet],[1.2,.6,white],[3.6,.6,color('554466')]];
     for(var i=0;i<objects.length;i++){
       var o=objects[i],x=o[0],z=o[1],id=i+1;
       box(x,.06,z,1.45,.13,1.22,color('9e92b4'),id);
@@ -158,7 +158,7 @@
       await new Promise(requestAnimationFrame);
     }
     // Quiet grounding marks, without roads, fences or peripheral props.
-    [-3,0,3].forEach(function(x){ring(x,.055,.6,.85,.87,color('d8cbe9'));});
+    objects.forEach(function(o){ring(o[0],.055,.6,.85,.87,color('d8cbe9'));});
     gl.useProgram(program); gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.STATIC_DRAW);
     [['aPosition',3,0],['aNormal',3,3],['aColor',3,6],['aId',1,9],['aPart',1,10]].forEach(function(a){
@@ -166,9 +166,9 @@
     });
     var uniforms={}; ['Eye','Right','Up','Forward','Aspect','Lifts','Reveal','Pulse','Pick','Hover'].forEach(function(n){uniforms[n]=gl.getUniformLocation(program,'u'+n);});
     gl.enable(gl.DEPTH_TEST); gl.disable(gl.CULL_FACE);
-    var theta=.47, elevation=.62, distance=23, targetTheta=.47, targetElevation=.62, targetDistance=23, lifts=[0,0,0], visible=true, raf=null, last=0, hoverTime=0, lost=false;
-    var aim=[0,.45,0],targetAim=[0,.45,0],reveals=[0,0,0],selectedAt=-10000,activeIndex=-1;
-    var keys=['infra','delivery','observe'];
+    var theta=.47, elevation=.62, distance=23, targetTheta=.47, targetElevation=.62, targetDistance=23, lifts=[0,0,0,0], visible=true, raf=null, last=0, hoverTime=0, lost=false;
+    var aim=[0,.45,0],targetAim=[0,.45,0],reveals=[0,0,0,0],selectedAt=-10000,activeIndex=-1;
+    var keys=['infra','delivery','observe','experience'];
     function normalize(a) { var l=Math.hypot(a[0],a[1],a[2]); return a.map(function(v){return v/l;}); }
     function cross(a,b){return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];}
     function draw(pick) {
@@ -177,7 +177,7 @@
       var forward=normalize([aim[0]-eye[0],aim[1]-eye[1],aim[2]-eye[2]]),right=normalize(cross(forward,[0,1,0])),up=cross(right,forward);
       gl.viewport(0,0,canvas.width,canvas.height); gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
       gl.uniform3fv(uniforms.Eye,eye);gl.uniform3fv(uniforms.Right,right);gl.uniform3fv(uniforms.Up,up);gl.uniform3fv(uniforms.Forward,forward);
-      gl.uniform1f(uniforms.Aspect,canvas.width/canvas.height);gl.uniform3fv(uniforms.Lifts,lifts);gl.uniform3fv(uniforms.Reveal,reveals);
+      gl.uniform1f(uniforms.Aspect,canvas.width/canvas.height);gl.uniform4fv(uniforms.Lifts,lifts);gl.uniform4fv(uniforms.Reveal,reveals);
       var age=(performance.now()-selectedAt)/1000;
       gl.uniform3fv(uniforms.Pulse,activeIndex>=0&&!reduced.matches?[objects[activeIndex][0],objects[activeIndex][1],age]:[0,0,-1]);gl.uniform1f(uniforms.Pick,pick?1:0);gl.uniform1f(uniforms.Hover,keys.indexOf(scene.dataset.highlight)+1);
       if(pick) gl.disable(gl.DITHER); else gl.enable(gl.DITHER);
@@ -188,7 +188,7 @@
       }
     }
     function render() {
-      if(reduced.matches) { theta=targetTheta;elevation=targetElevation;distance=targetDistance;aim=targetAim.slice();lifts=[0,0,0];reveals=[0,0,0]; }
+      if(reduced.matches) { theta=targetTheta;elevation=targetElevation;distance=targetDistance;aim=targetAim.slice();lifts=[0,0,0,0];reveals=[0,0,0,0]; }
       draw(false);
     }
     function frame(t) {
@@ -217,7 +217,7 @@
       var r=canvas.getBoundingClientRect(),pixel=new Uint8Array(4);
       draw(true);
       gl.readPixels(Math.min(canvas.width-1,Math.max(0,Math.floor((e.clientX-r.left)/r.width*canvas.width))),Math.min(canvas.height-1,Math.max(0,Math.floor((r.bottom-e.clientY)/r.height*canvas.height))),1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixel);
-      draw(false);return pixel[0]>=1&&pixel[0]<=3?keys[pixel[0]-1]:null;
+      draw(false);return pixel[0]>=1&&pixel[0]<=keys.length?keys[pixel[0]-1]:null;
     }
     var drag=null;
     canvas.addEventListener('pointerdown',function(e){if(e.isPrimary&&e.button===0){drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,touch:e.pointerType==='touch',moved:false};canvas.setPointerCapture(e.pointerId);}});
@@ -239,18 +239,18 @@
     canvas.addEventListener('pointercancel',function(){drag=null;});
     canvas.addEventListener('lostpointercapture',function(){drag=null;});
     canvas.addEventListener('keydown',function(e){
-      if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','Escape','+','-','1','2','3'].indexOf(e.key)<0)return;e.preventDefault();
+      if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','Escape','+','-','1','2','3','4'].indexOf(e.key)<0)return;e.preventDefault();
       if(e.key==='ArrowLeft')targetTheta-=.15;if(e.key==='ArrowRight')targetTheta+=.15;
       if(e.key==='ArrowUp')targetElevation=Math.min(1.05,targetElevation+.1);if(e.key==='ArrowDown')targetElevation=Math.max(.4,targetElevation-.1);
       if(e.key==='Home'||e.key==='Escape')returnToYard();
       if(e.key==='+')targetDistance=Math.max(homeDistance()*.7,targetDistance-.8);if(e.key==='-')targetDistance=Math.min(homeDistance()*1.35,targetDistance+.8);
-      if(/^[123]$/.test(e.key))scene.querySelector('.package-name[data-system="'+keys[Number(e.key)-1]+'"]').click();resume();
+      if(/^[1234]$/.test(e.key))scene.querySelector('.package-name[data-system="'+keys[Number(e.key)-1]+'"]').click();resume();
     });
     function returnToYard(){targetTheta=.47;targetElevation=.62;targetDistance=homeDistance();targetAim=[0,.45,0];activeIndex=-1;selectedAt=-10000;resume();}
     canvas.addEventListener('dblclick',function(e){if(!pick(e))returnToYard();});
     scene.addEventListener('package-select',function(e){
-      activeIndex=keys.indexOf(e.detail.key);selectedAt=performance.now();
-      if(!reduced.matches){var o=objects[activeIndex];targetAim=[o[0]*.22,.5,.1];targetTheta=[.36,.47,.58][activeIndex];targetElevation=.68;targetDistance=homeDistance()*.97;}
+      activeIndex=keys.indexOf(e.detail.key);if(activeIndex<0)return;selectedAt=performance.now();
+      if(!reduced.matches){var o=objects[activeIndex];targetAim=[o[0]*.22,.5,.1];targetTheta=[.34,.43,.52,.61][activeIndex];targetElevation=.68;targetDistance=homeDistance()*.97;}
       render();resume();
     });
     new MutationObserver(render).observe(scene,{attributes:true,attributeFilter:['data-focus','data-highlight']});
