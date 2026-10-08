@@ -1,0 +1,14 @@
+{
+  "name": "Arash Ziaee — DevOps Engineer",
+  "short_name": "Arash Ziaee",
+  "description": "DevOps Engineer. Apigee X, Terraform, GCP, CI/CD.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "theme_color": "#f3f2f6",
+  "background_color": "#f3f2f6",
+  "icons": [
+    { "src": "img/icon-180.20988142.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "img/icon-512.8a14427f.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

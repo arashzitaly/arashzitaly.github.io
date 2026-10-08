@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://arashzitaly.github.io/sitemap.xml
